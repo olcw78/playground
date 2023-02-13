@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
 
 public class CameraPlay : MonoBehaviour
@@ -10,14 +13,16 @@ public class CameraPlay : MonoBehaviour
                                              $"pixel height: {_camera.pixelHeight}\n" +
                                              $"pixel rect: {_camera.pixelRect}";
 
-    void Start() => _camera ??= Camera.main;
+    void Awake() => _camera = Camera.main;
 
-    // Update is called once per frame
-    void Update()
+    void Start()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Debug.Log(PrettyCameraPixelAttrs);
-        }
+        this.UpdateAsObservable()
+            .Where(_ => Input.GetKeyDown(KeyCode.Space))
+            .Throttle(TimeSpan.FromSeconds(0.5f))
+            .Subscribe(ob =>
+            {
+                Debug.Log(PrettyCameraPixelAttrs);
+            });
     }
 }
