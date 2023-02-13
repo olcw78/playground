@@ -1,0 +1,9 @@
+Library/
+Temp/
+obj/
+Logs/
+.idea/
+.vs/
+.vscode/
+*.csproj
+
